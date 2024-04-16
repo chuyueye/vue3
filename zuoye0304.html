@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 3 Student List</title>
+
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <!-- 引入Vue 3 -->
+    <script src="https://unpkg.com/vue@3.4.21/dist/vue.global.js"></script>
+    <!-- 引入axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+    <!-- 应用挂载点 -->
+    <div id="app">
+        <div class="header">
+            <h1>学生名单</h1>
+            <button @click="fetchStudents">(刷新)</button>
+        </div>
+        <!-- <form>
+            <p>Add item</p>
+            <p>Item name: <input type="text" required></p>
+            <p>How many: <input type="number"></p>
+            <button type="submit">Add item</button>
+        </form> -->
+
+        <form @submit.prevent="addStudent">
+            <input type="text" v-model="newStudentName" placeholder="姓名">
+            <input type="number" v-model="newStudentChinese" placeholder="语文成绩">
+            <input type="number" v-model="newStudentMath" placeholder="数学成绩">
+            <input type="number" v-model="newStudentEnglish" placeholder="英语成绩">
+            <button type="submit">添加学生</button>
+        </form>
+        <ul>
+            <!-- 使用v-for遍历学生名单 -->
+            <li v-for="student in students" :key="student.id">
+                {{ student.name }} - 语文: {{ student.scores.chinese }},
+                数学: {{ student.scores.math }},
+                英语: {{ student.scores.english }}
+                <button @click="removeStudent(student.id)">删除</button>
+            </li>
+        </ul>
+        <button @click="sendData">上传给服务器</button>
+    </div>
+
+    <script>
+        // 创建Vue应用
+        const app = Vue.createApp({
+            //把数据都放在return后面
+            data() {
+                return {
+                    // 学生数据
+                    students: [
+                        { id: 1, name: '张三', scores: { chinese: 85, math: 92, english: 78 } },
+                        { id: 2, name: '李四', scores: { chinese: 88, math: 74, english: 90 } },
+                        { id: 3, name: '王五', scores: { chinese: 95, math: 88, english: 85 } },
+                    ],
+                    newStudentName: ' ',
+                    newStudentChinese: 0,
+                    newStudentMath: 0,
+                    newStudentEnglish: 0,
+                    nextId: 4,
+                }
+            },
+
+            // 可以在这里添加方法，比如添加或删除学生
+            methods: {
+                addStudent() {
+                    if (this.newStudentName.trim() === '') return;
+                    this.students.push({
+                        id: this.nextId++,
+                        name: this.newStudentName,
+                        scores: {
+                            chinese: this.newStudentChinese,
+                            math: this.newStudentMath,
+                            english: this.newStudentEnglish
+                        }
+                    });
+                    // input 复原
+                    this.newStudentName = '';
+                    this.newStudentChinese = 0;
+                    this.newStudentMath = 0;
+                    this.newStudentEnglish = 0;
+                },
+                removeStudent(id) {
+                    this.students = this.students.filter(student => student.id !== id);
+                },
+                sendData() {
+                    const url = 'http://127.0.0.1:3000/save'; // 替换成后端接口地址，随着项目修改,http必须！
+                    console.log(this.students);
+                    
+                    const params = {
+                        
+                        students: this.students,
+                    };
+                    // console.log(params)
+
+                    // 使用 Axios 发送 POST 请求
+                    axios.post(url, params)
+                        .then(response => {
+                            console.log('Response:', response.data);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+            }
+        });
+        app.mount('#app'); // 挂载Vue应用
+
+
+    </script>
+</body>
+
+</html>

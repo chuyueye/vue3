@@ -1,0 +1,24 @@
+
+
+.header {
+  display: flex;       /* 使用 Flexbox 布局 */
+  align-items: center; /* 垂直居中对齐 */
+  gap: 20px;           /* 标题和按钮之间的间距 */
+  margin-bottom: 30px; /* 设置标题下方的外边距为20px */
+  margin-top: 30px; /* 设置标题下方的外边距为20px */
+}
+
+.header h1, .header button {
+  font-family: Arial, sans-serif; /* 设置字体 */
+  font-size: 24px; /* 设置字体大小 */
+  color: black; /* 设置字体颜色 */
+  background: none; /* 去掉按钮的背景色 */
+  border: none; /* 去掉按钮的边框 */
+  padding: 0; /* 移除内边距 */
+  cursor: pointer; /* 当鼠标悬停时显示指针 */
+  outline: none; /* 点击时去掉蓝色轮廓线 */
+}
+
+.header button:hover {
+  text-decoration: underline; /* 鼠标悬停时下划线，增加交互性 */
+}
